@@ -9,11 +9,14 @@ function Game() {
     const [players, setPlayers] = useState({}); // Un objet où chaque clé est un ID de session et la valeur est la position
     const [keyStates, setKeyStates] = useState({ up: false, down: false, left: false, right: false });
     const [deathMessage, setDeathMessage] = useState('');
+    const animationFrameId = useRef();
+
 
 
 
     let ws = useRef(null); // Référence pour stocker la connexion WebSocket
 
+    
     useEffect(() => {
         connectWebSocket(); // Connectez comme avant
     
@@ -36,7 +39,7 @@ function Game() {
 
     // Gère la connexion WebSocket
     const connectWebSocket = () => {
-        ws.current = new WebSocket('ws://localhost:8080/ws/game');
+        ws.current = new WebSocket('wss://syxeowar-back.onrender.com/ws/game');
         ws.current.onopen = () => {
             console.log('WebSocket connected');
             setIsConnected(true);
@@ -127,7 +130,7 @@ function Game() {
             // Affichez le pseudo près du joueur
             ctx.fillStyle = "#000"; // Couleur du texte pour le pseudo
             ctx.font = "12px Arial";
-            ctx.fillText(pseudo, x-10, y+5); // Positionnez le texte à côté du cercle
+            ctx.fillText(score, x-3, y+5); // Positionnez le texte à côté du cercle
         });
 
         // Dessiner les carrés jaunes
@@ -158,7 +161,7 @@ const renderPlayersList = () => {
                         backgroundColor: player.color,
                         marginRight: '10px',
                     }}></span>
-                    <span style={{ color: textColor }}>{player.pseudo}: {player.score}</span>
+                    <span style={{ color: textColor }}>{player.score}</span>
                 </li>
             );
         });
